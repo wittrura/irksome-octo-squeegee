@@ -72,4 +72,29 @@ describe('Creating new cities', function(){
 			.get('/cities')
 			.expect(JSON.stringify(['Springfield']), done);
 	});
+	
+	it('Validates city city name AND description are both present', function(done){
+		request(app)
+		.post('/cities')
+		.send('name=%description=')
+		.expect(400, done)
+	});
+});
+
+describe('Deleting cities', function(){
+	before(function(){
+		client.hset('cities', 'Banana', 'a tasty fruit');	
+	});
+	after(function(){
+		client.flushdb();
+	});
+
+	
+	it('Returns a 204 status code', function(done){
+	
+		request(app)
+			.delete('/cities/Banana')
+			.expect(204, done);
+	});
+	
 });
